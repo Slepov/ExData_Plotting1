@@ -28,7 +28,7 @@ axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
 plot(data$Sub_metering_1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
 lines(data$Sub_metering_2, col="red")
 lines(data$Sub_metering_3, col="blue")
-legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "blue", "red"))
+legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "blue", "red"), bty = "n")
 axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
 # 3
 plot(data$Voltage, type="l", xlab="datetime",ylab="Voltage", xaxt="n")
