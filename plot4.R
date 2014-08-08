@@ -11,9 +11,10 @@ data<-read.table("household_power_consumption.txt", header = TRUE, sep = ";")
 ## subset the dates 2007-02-01 and 2007-02-02
 data<-data[data[,1]=="1/2/2007"|data[,1]=="2/2/2007",]
 
-## change the class
-data[,1]<-as.Date(data[,1],"%d/%m/%Y")
+## date time
+data$datetime<-strptime(paste(data$Date,data$Time), "%d/%m/%Y %H:%M:%S")
 
+## change the class
 for(i in 3:8){
     data[,i]<-as.numeric(as.character(data[,i]))
 }
@@ -21,19 +22,17 @@ for(i in 3:8){
 ## plot
 png("plot4.png")
 par(mfcol = c(2, 2))
-# 1 
-plot(data$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xaxt="n", xlab="")
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat")) 
-# 2
-plot(data$Sub_metering_1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
-lines(data$Sub_metering_2, col="red")
-lines(data$Sub_metering_3, col="blue")
-legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "blue", "red"), bty = "n")
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
-# 3
-plot(data$Voltage, type="l", xlab="datetime",ylab="Voltage", xaxt="n")
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
-# 4
-plot(data$Global_reactive_power, type="l", xlab="datetime",ylab=names(d1)[4], xaxt="n")
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
+with(data, {
+    plot(datetime,Global_active_power, type="l", ylab="Global Active Power", xlab="") 
+    
+    plot(datetime, Sub_metering_1, type="l", ylab="Energy sub metering", xlab="")
+    lines(datetime, Sub_metering_2, col="red")
+    lines(datetime, Sub_metering_3, col="blue")
+    legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "red", "blue"), bty = "n")
+    
+    plot(datetime,Voltage, type="l")
+    
+    plot(datetime,Global_reactive_power, type="l")
+    }
+)
 dev.off()

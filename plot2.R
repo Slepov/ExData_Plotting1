@@ -11,15 +11,18 @@ data<-read.table("household_power_consumption.txt", header = TRUE, sep = ";")
 ## subset the dates 2007-02-01 and 2007-02-02
 data<-data[data[,1]=="1/2/2007"|data[,1]=="2/2/2007",]
 
-## change the class
-data[,1]<-as.Date(data[,1],"%d/%m/%Y")
+## date time
+data$datetime<-strptime(paste(data$Date,data$Time), "%d/%m/%Y %H:%M:%S")
 
+## change the class
 for(i in 3:8){
     data[,i]<-as.numeric(as.character(data[,i]))
 }
 
 ## plot
 png("plot2.png")
-plot(data$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xaxt="n", xlab="")
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat")) 
+plot(data$datetime,data$Global_active_power, type="l", ylab="Global Active Power (kilowatts)", xlab="")
 dev.off()
+
+
+

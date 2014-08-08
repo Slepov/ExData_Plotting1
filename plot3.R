@@ -11,18 +11,21 @@ data<-read.table("household_power_consumption.txt", header = TRUE, sep = ";")
 ## subset the dates 2007-02-01 and 2007-02-02
 data<-data[data[,1]=="1/2/2007"|data[,1]=="2/2/2007",]
 
-## change the class
-data[,1]<-as.Date(data[,1],"%d/%m/%Y")
+## date time
+data$datetime<-strptime(paste(data$Date,data$Time), "%d/%m/%Y %H:%M:%S")
 
+## change the class
 for(i in 3:8){
     data[,i]<-as.numeric(as.character(data[,i]))
 }
 
 ## plot
 png("plot3.png")
-plot(data$Sub_metering_1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
-lines(data$Sub_metering_2, col="red")
-lines(data$Sub_metering_3, col="blue")
-legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "blue", "red"))
-axis(1, at=x<-c(0,1440,2880), labels=y<-c("Thu","Fri", "Sat"))
+with(data, {
+    plot(datetime, Sub_metering_1, type="l", ylab="Energy sub metering", xlab="")
+    lines(datetime, Sub_metering_2, col="red")
+    lines(datetime, Sub_metering_3, col="blue")
+    legend("topright", legend = names(data)[7:9],lty=c(1,1), col=c("black", "red", "blue"))
+    }
+)
 dev.off()
